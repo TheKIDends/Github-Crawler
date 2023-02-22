@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" rel="stylesheet">
+    <script crossorigin="anonymous"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Crawl Github</title>
+</head>
+
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+    <div class="container-fluid" style="margin-left: 40px">
+        <form action="/releases" class="d-flex" method="get">
+            <input class="form-control me-2" id="crawl-link-input" name="githubRepo"
+                   placeholder="Ví dụ: https://github.com/mastodon/mastodon" size="60">
+            <button class="btn btn-outline-success" type="submit">Crawl</button>
+        </form>
+    </div>
+</nav>
+
+<main>
+    <h1 style="text-align: center">Releases: <%=data.length%></h1>
+    <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+            <th scope="col" style="text-align: center">ID</th>
+            <th scope="col" style="text-align: center">Version</th>
+            <th scope="col" style="text-align: center">Author</th>
+            <th scope="col" style="text-align: center">Commit</th>
+            <th scope="col" style="text-align: center">Change Log</th>
+            <th scope="col" style="text-align: center">Created At</th>
+            <th scope="col" style="text-align: center">Published At</th>
+        </tr>
+        </thead>
+        <tbody>
+        <% for (let i = 0; i < data.length; ++i) { %>
+            <% let info = data[i]; %>
+            <tr style="vertical-align: center">
+                <td style="text-align: center"><%= info.id%></td>
+                <td style="text-align: center"><a href="<%= info.version_url%>"><%= info.version%></a></td>
+
+                <td style="text-align: center">
+                    <img src="<%= info.author.avt%>" alt="avatar" width="32px" height="32px">
+                    <br>
+                    <a href="<%= info.author.url%>"> <%= info.author.name%></a>
+                </td>
+
+                <td style="text-align: center">
+                    <a href="/commits_detail?githubRepo=<%= github_repo%>&index=<%= i%>">
+                        <%= info.total_commits%>
+                    </a>
+                </td>
+
+                <td>
+                    <div
+                        class="article"
+                        style="max-width: 900px; min-width: 700px"
+                    >
+                        <%-info.change_log%>
+                    </div>
+                </td>
+
+                <td><%= info.created_at%></td>
+                <td><%= info.published_at%></td>
+            </tr>
+        <% } %>
+        </tbody>
+    </table>
+</main>
+</body>
+
+</html>
