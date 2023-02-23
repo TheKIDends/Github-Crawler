@@ -1,11 +1,11 @@
 import {HTTP_RESPONSE} from "../../constants/index.js";
+import {mdToHtml} from "./md-to-html.js";
 
 import rp from "request-promise";
 import axios from "axios";
 import * as cheerio from "cheerio";
-import markdown from "markdown";
 
-const TOKEN = "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";
+const TOKEN = "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";
 
 async function getMaxNumPage(crawlURL) {
     let maxNumPage = -1;
@@ -79,7 +79,8 @@ export async function crawl_commits(crawlURL, index) {
                         code: item?.sha,
                         url: item?.html_url,
                     },
-                    comment: item?.commit?.message,
+                    comment: item?.commit?.message === "" ? `<b>Không có Change log</b>` : mdToHtml(item?.commit?.message),
+                    // comment: item?.commit?.message,
                     date: item?.commit?.committer?.date
                 }));
             });

@@ -1,12 +1,11 @@
 import {HTTP_RESPONSE} from "../../constants/index.js";
+import {mdToHtml} from "./md-to-html.js";
 
 import rp from "request-promise";
 import axios from "axios";
 import * as cheerio from "cheerio";
-import markdown from "markdown";
 
-
-const TOKEN = "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";
+const TOKEN = "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";
 
 async function getMaxNumPage(crawlURL) {
     let maxNumPage = -1;
@@ -53,7 +52,8 @@ export async function crawl_releases(crawlURL) {
                             version_url: item?.html_url,
                             created_at: item?.created_at,
                             published_at: item?.published_at,
-                            change_log: item?.body
+                            // change_log: item?.body
+                            change_log: item?.body === "" ? `<b>Không có Change log</b>` : mdToHtml(item?.body)
                         }));
                     });
                 resolve(versionData);
@@ -103,10 +103,10 @@ export async function crawl_releases(crawlURL) {
 
 };
 
-async function Test() {
-    const CRAWL_URL = "https://github.com/DMOJ/judge-server";
-    const ret = await crawl_releases(CRAWL_URL);
-    console.log(ret);
-}
-
-Test();
+// async function Test() {
+//     const CRAWL_URL = "https://github.com/DMOJ/judge-server";
+//     const ret = await crawl_releases(CRAWL_URL);
+//     console.log(ret);
+// }
+//
+// Test();
